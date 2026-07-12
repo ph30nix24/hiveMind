@@ -1,0 +1,49 @@
+# --- System / OS Files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Node.js / Root Dependencies ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Environment / Secrets (CRITICAL) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# --- Backend (Express/Node) ---
+/server/dist/
+/server/build/
+/server/logs/
+*.log
+*.seed
+*.pid
+
+# --- Frontend (React) ---
+# If your frontend folder is named 'client'
+/client/node_modules/
+/client/build/
+/client/dist/
+/client/stats.json
+/client/.eslintcache
+
+# If using Vite
+/client/target/
+
+# --- Testing / Coverage ---
+/coverage/
+/client/coverage/
+
+# --- IDE / Editor Config ---
+.vscode/
+.idea/
+*.subo
+*.sln
+*.swp
