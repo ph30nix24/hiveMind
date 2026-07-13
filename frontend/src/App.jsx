@@ -1,8 +1,9 @@
-
+import { RouterProvider } from 'react-router'
+import { router } from './app.routes'
 
 const App = () => {
   return (
-    <div className='w-full h-screen bg-[#131313] text-white text-4xl italic flex justify-center items-center'>HiveMind</div>
+    <RouterProvider router={router} />
   )
 }
 

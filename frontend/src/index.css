@@ -1,5 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 
+@theme {
+  --font-heading: 'Hanken Grotesk', sans-serif;
+  --font-body: "Inter", sans-serif;
+  --color-bg: #080811;
+  --color-panel: #11121c;
+  --color-border: #2a2b38;
+  --color-primary: #5969ff;
+  --color-secondary: #a15bf2;
+  --color-text-main: #f1f5f9;
+  --color-text-muted: #94a3b8;
+}
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; font-size: 16px; }
 
+body {
+  background-color: #080811;
+  color: #f1f5f9;
+  font-family: 'Hanken Grotesk', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(circle at 10% 90%, rgba(100, 50, 200, 0.10) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(50, 100, 255, 0.10) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+::selection { background-color: #5969ff; color: white; }
+
+html, body {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}
+
+/* ── Custom utilities ─────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(to right, #00d2ff, #a15bf2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass-panel {
+  background: rgba(17, 18, 28, 0.60);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.50);
+}
+
+.btn-gradient {
+  background: linear-gradient(to right, #4866ff, #9f54fc);
+}
+
+.input-field {
+  background-color: transparent;
+  border: 1px solid #2a2b38;
+  color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: rgba(148, 163, 184, 0.6);
+}
+
+.input-field:focus {
+  border-color: #5969ff;
+  box-shadow: 0 0 0 1px #5969ff;
+}
+
+.social-btn-base {
+  background: transparent;
+  border: 1px solid #2a2b38;
+  transition: background 0.2s;
+}
+
+.social-btn-base:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Animations ───────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease both;
+}
+
+.animate-fade-in-up-delay {
+  animation: fadeInUp 0.6s 0.15s ease both;
+}
