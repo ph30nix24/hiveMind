@@ -47,3 +47,7 @@ yarn-error.log*
 *.subo
 *.sln
 *.swp
+
+
+serviceAccountKey.json
+firebase-adminsdk-*.json

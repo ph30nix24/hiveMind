@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import errorHandler from './middleware/errorHandler.middleware.js';
 const app = express();
 
 
@@ -14,6 +15,6 @@ app.get('/', (req, res) => {
 })
 
 
-
+app.use(errorHandler)
 
 export default app;
