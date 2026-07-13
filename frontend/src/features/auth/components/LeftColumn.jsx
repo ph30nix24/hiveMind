@@ -30,11 +30,11 @@ const LeftColumn = () => (
     <div className="space-y-4">
       <h1 className="text-2xl lg:text-4xl font-bold leading-tight tracking-tight text-white font-heading italic md:text-center lg:text-start">
         Create your account <br className='max-lg:hidden' />
-        and build with <br className='max-md:hidden' />
+        and build <br className='md:hidden' /> with <br className='max-md:hidden' />
         <span className="gradient-text">intelligent agents.</span>
       </h1>
       <p className="text-[13px] md:text-[15px] text-text-muted leading-relaxed lg:max-w-md font-body md:text-center lg:text-start ">
-        Join the future of multi-agent collaboration. Automate, orchestrate,
+        Join the future of multi-agent collaboration. Automate, <br className='md:hidden' /> orchestrate,
         and scale your ideas with AI.
       </p>
     </div>
