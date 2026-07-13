@@ -38,7 +38,7 @@ const LeftColumn = () => (
         and scale your ideas with AI.
       </p>
     </div>
-
+    
     {/* Hero image */}
     <div className="w-full max-w-md mx-auto lg:mx-0 max-lg:hidden">
       <img

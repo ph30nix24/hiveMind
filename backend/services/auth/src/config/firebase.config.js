@@ -1,5 +1,4 @@
-import { cert, initializeApp } from "firebase-admin"
-import serviceAccount from '../../serviceAccountKey.json' with {type: "json"};
+import { cert, initializeApp } from "firebase-admin/app"
 
 export const firebaseApp = initializeApp({
   credential: cert({

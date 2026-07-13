@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../../utils/firebase';
+import { googleLoginApi } from '../services/auth.apis';
 
 /* ── Password strength ────────────────────────────────────── */
 function getStrength(pw) {
@@ -69,6 +72,13 @@ const SignUpForm = () => {
   const handleChange = (e) => setFields((p) => ({ ...p, [e.target.id]: e.target.value }));
   const handleSubmit = (e) => { e.preventDefault(); setSubmitted(true); };
 
+  const handleGoogleSignUp = async () => {
+    const data = await signInWithPopup(auth, googleProvider)
+    const idToken = await data.user.getIdToken();
+    
+    const resData = await googleLoginApi({ token: idToken})
+    
+  }
   /* Shared class strings */
   const inputBase =
     'input-field block w-full rounded-lg py-3 pr-3 pl-10 text-sm font-[inherit] focus:ring-0';
@@ -189,20 +199,17 @@ const SignUpForm = () => {
 
         {/* Social auth */}
         <div className="mt-8 w-full">
-          {[
-            { id: 'google-signin-btn', label: 'Sign up with Google', Icon: GoogleIcon, text: 'Google' },
-          ].map(({ id, label, Icon, text }) => (
             <button
-              key={id}
-              id={id}
+              key='google-signin-btn'
+              id='google-signin-btn'
               type="button"
-              aria-label={label}
+              aria-label='Sign up with Google'
               className=" w-full social-btn-base flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer font-[inherit]"
+              onClick={handleGoogleSignUp}
             >
-              <Icon />
-              <span className="">{text}</span>
+              <GoogleIcon />
+              <span className="">Google</span>
             </button>
-          ))}
         </div>
 
         {/* Mobile sign-in */}

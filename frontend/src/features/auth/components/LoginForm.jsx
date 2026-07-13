@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../../utils/firebase';
 
 /* ── Social Icons ─────────────────────────────────────────── */
 const GoogleIcon = () => (
@@ -11,6 +13,15 @@ const GoogleIcon = () => (
         <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
     </svg>
 );
+
+const googleLogin = async() => {
+    try {
+        const data = await signInWithPopup(auth, googleProvider);
+        console.log(data)
+    } catch (error) {
+        console.error("Error while login", error.message)
+    }
+}
 
 
 /* ── LoginForm ────────────────────────────────────────────── */
@@ -187,6 +198,8 @@ const LoginForm = () => {
                         type="button"
                         aria-label={'Sign in with Google'}
                         className="social-btn-base flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer font-[inherit] w-full"
+                        onClick={() => googleLogin()}
+
                     >
                         <GoogleIcon />
                         <span className="">Google</span>

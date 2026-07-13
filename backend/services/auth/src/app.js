@@ -1,18 +1,22 @@
 import express from 'express';
 import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.middleware.js';
+
 const app = express();
 
 
 
 app.use(morgan('dev'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
 
-app.get('/', (req, res) => {
-    return res.status(200).json({
-        message: "Hello From Auth"
-    })
-})
+
+import authRouter from './routes/auth.routes.js';
+app.use('/', authRouter)
+
+
+
 
 
 app.use(errorHandler)
