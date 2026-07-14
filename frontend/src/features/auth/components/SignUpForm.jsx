@@ -70,15 +70,16 @@ const SignUpForm = () => {
   const strength = getStrength(fields.password);
 
   const handleChange = (e) => setFields((p) => ({ ...p, [e.target.id]: e.target.value }));
-  const handleSubmit = (e) => { e.preventDefault(); setSubmitted(true); };
+  const handleSubmit = (e) => { e.preventDefault(); console.log(fields); setSubmitted(true); };
 
   const handleGoogleSignUp = async () => {
     const data = await signInWithPopup(auth, googleProvider)
     const idToken = await data.user.getIdToken();
-    
     const resData = await googleLoginApi({ token: idToken})
-    
+    console.log(resData)
   }
+
+
   /* Shared class strings */
   const inputBase =
     'input-field block w-full rounded-lg py-3 pr-3 pl-10 text-sm font-[inherit] focus:ring-0';
@@ -104,7 +105,7 @@ const SignUpForm = () => {
           <p className="text-text-muted font-body text-sm">Create your account to get started</p>
         </div>
 
-        <form className="space-y-3 font-body" onSubmit={handleSubmit} noValidate>
+        <form className="space-y-3 font-body" onSubmit={handleSubmit}>
           {/* Full Name */}
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-text-main" htmlFor="fullName">
@@ -137,7 +138,7 @@ const SignUpForm = () => {
             <div className="relative">
               <div className={iconLeft}><Lock size={20} /></div>
               <input id="password" type={showPw ? 'text' : 'password'} className={inputWithRight}
-                placeholder="Create a password" value={fields.password} onChange={handleChange}
+                placeholder="Create a password" minLength={8} value={fields.password} onChange={handleChange}
                 autoComplete="new-password" />
               <button type="button" className={iconRight} onClick={() => setShowPw((v) => !v)}
                 aria-label={showPw ? 'Hide password' : 'Show password'}>

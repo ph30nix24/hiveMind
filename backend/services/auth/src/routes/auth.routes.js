@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { googleLoginHandler } from '../controllers/auth.controller.js';
 
 const authRouter = Router();
 
@@ -7,5 +8,8 @@ authRouter.get('/', (req, res) => {
         message: "Hello From Auth"
     })
 })
+
+
+authRouter.post('/google', googleLoginHandler);
 
 export default authRouter;

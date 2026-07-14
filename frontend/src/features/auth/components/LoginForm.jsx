@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../../utils/firebase';
+import { googleLoginApi } from '../services/auth.apis';
 
 /* ── Social Icons ─────────────────────────────────────────── */
 const GoogleIcon = () => (
@@ -14,14 +15,7 @@ const GoogleIcon = () => (
     </svg>
 );
 
-const googleLogin = async() => {
-    try {
-        const data = await signInWithPopup(auth, googleProvider);
-        console.log(data)
-    } catch (error) {
-        console.error("Error while login", error.message)
-    }
-}
+
 
 
 /* ── LoginForm ────────────────────────────────────────────── */
@@ -33,6 +27,17 @@ const LoginForm = () => {
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => setFields((p) => ({ ...p, [e.target.id]: e.target.value }));
+
+    const googleLogin = async () => {
+        try {
+            const data = await signInWithPopup(auth, googleProvider);
+            const idToken = await data.user.getIdToken();
+            const res = await googleLoginApi({ token: idToken })
+            console.log(res.message)
+        } catch (error) {
+            console.error("Error while login", error.message)
+        }
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -135,8 +140,8 @@ const LoginForm = () => {
                             />
                             <div
                                 className={`w-5 h-5 rounded flex items-center justify-center border transition-all duration-200 ${remember
-                                        ? 'bg-primary border-primary'
-                                        : 'bg-transparent border-border group-hover:border-primary'
+                                    ? 'bg-primary border-primary'
+                                    : 'bg-transparent border-border group-hover:border-primary'
                                     }`}
                             >
                                 {remember && (

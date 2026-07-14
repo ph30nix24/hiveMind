@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const AUTH_URL = `${import.meta.env.BACKEND_URI}/auth`;
+const AUTH_URL = `${import.meta.env.VITE_BACKEND_URI}/hivemind/auth`;
 
 export const googleLoginApi = async ({ token }) => {
     try {
@@ -13,3 +13,5 @@ export const googleLoginApi = async ({ token }) => {
     console.error("Google login failed:", error.response?.data || error.message);
   }
 }
+
+

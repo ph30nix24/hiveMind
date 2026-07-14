@@ -7,9 +7,9 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth"
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "hivehind.firebaseapp.com",
+  authDomain: "hivemind-c53dd.firebaseapp.com",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: "hivehind.firebasestorage.app",
+  storageBucket: "hivemind-c53dd.firebasestorage.app",
   messagingSenderId: import.meta.env.VITE_FIREBASE_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
