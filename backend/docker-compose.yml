@@ -1,0 +1,18 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: hiveMind-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis-data:
