@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq';
-import { queueConnection } from '../../../../shared/queue/connection';
+import { queueConnection } from '../../../../shared/queue/connection.js';
 
 export const emailQueue = new Queue('email', {
     connection: queueConnection,

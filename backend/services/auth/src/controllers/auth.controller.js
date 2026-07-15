@@ -6,6 +6,7 @@ import ApiResponse from '../utils/ApiResponse.js';
 import ApiError from '../utils/ApiError.js'
 import bcrypt from 'bcryptjs';
 import redis from '../../../../shared/redis/redis.js';
+import { emailQueue } from '../queues/email.queue.js';
 
 
 
@@ -24,6 +25,7 @@ export const googleLoginHandler = async (req, res, next) => {
         const { name, uuid, email, picture } = decoded
 
         let user = await User.findOne({ firebaseUID: uuid });
+
         if (!user) {
             user = await User.create({
                 name: name || email.split("@")[0],
@@ -32,13 +34,25 @@ export const googleLoginHandler = async (req, res, next) => {
                 isVerified: true,
                 avatar: picture
             })
+
+            await emailQueue.add('welcome-user', {
+                type: 'welcome-user',
+                to: user.email,
+                name: user.name
+            })
+        } else {
+            await emailQueue.add('login-user', {
+                type: 'login-user',
+                to: user.email,
+                name: user.name
+            })
         }
 
         const sessionID = crypto.randomUUID();
 
         redis.set(`sessionId:${sessionID}`, JSON.stringify({
             _id: user._id
-        }), 'EX', 7 * 24 * 60* 60)
+        }), 'EX', 7 * 24 * 60 * 60)
 
         res.cookie("session", sessionID, {
             httpOnly: true,
@@ -46,6 +60,8 @@ export const googleLoginHandler = async (req, res, next) => {
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
+
+
 
         return res.status(200).json(new ApiResponse(200, user, "successfully logged in user"))
     } catch (e) {
@@ -97,3 +113,4 @@ export const signUpHandler = async (req, res, next) => {
         next(e)
     }
 }
+

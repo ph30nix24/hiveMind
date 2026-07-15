@@ -1,9 +1,20 @@
 services:
+  auth-worker:
+    build:
+      context: .
+    container_name: hiveMind-auth-worker
+    command: node services/auth/src/workers/email.worker.js
+    env_file:
+      - ./services/auth/.env.docker
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
   redis:
     image: redis:7-alpine
     container_name: hiveMind-redis
     restart: unless-stopped
-    command: redis-server --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes
+    command:  redis-server --maxmemory 256mb --maxmemory-policy noeviction --appendonly yes
     ports:
       - "6379:6379"
     volumes:
