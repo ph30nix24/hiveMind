@@ -1,28 +1,5 @@
-import { Users, Zap, ShieldCheck } from 'lucide-react';
+import { features } from "../../../utils";
 
-const features = [
-  {
-    id: 'multi-agent',
-    icon: Users,
-    iconClass: 'bg-[#5969ff]/10 text-[#5969ff] border-[#5969ff]/20',
-    title: 'Multi-Agent Collaboration',
-    description: 'Create, manage, and orchestrate multiple AI agents seamlessly.',
-  },
-  {
-    id: 'automation',
-    icon: Zap,
-    iconClass: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    title: 'Powerful Automation',
-    description: 'Automate workflows and complex tasks with intelligent agents.',
-  },
-  {
-    id: 'security',
-    icon: ShieldCheck,
-    iconClass: 'bg-[#a15bf2]/10 text-[#a15bf2] border-[#a15bf2]/20',
-    title: 'Secure & Private',
-    description: 'Your data and agents are protected with enterprise-grade security.',
-  },
-];
 
 const LeftColumn = () => (
   <div className="flex-1 w-full max-w-xl flex flex-col lg:gap-8 animate-fade-in-up">

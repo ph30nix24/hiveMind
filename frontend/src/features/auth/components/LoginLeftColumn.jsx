@@ -1,38 +1,9 @@
-import { BrainCircuit, BarChart3, Globe } from 'lucide-react';
+import { features } from '../../../utils';
+import { testimonial } from '../../../utils'
 
 
 
-const testimonial = {
-  quote:
-    '"Hivemind transformed how our team automates research. What used to take days now runs in minutes."',
-  name: 'Sarah Chen',
-  role: 'CTO at NovaTech',
-  avatar: 'SC',
-};
 
-const features = [
-  {
-    id: 'brain',
-    icon: BrainCircuit,
-    iconClass: 'bg-[#5969ff]/10 text-[#5969ff] border-[#5969ff]/20',
-    title: 'Intelligent Orchestration',
-    description: 'Your agents learn, adapt, and collaborate across tasks automatically.',
-  },
-  {
-    id: 'analytics',
-    icon: BarChart3,
-    iconClass: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    title: 'Real-Time Analytics',
-    description: 'Monitor performance, costs, and outputs with a live dashboard.',
-  },
-  {
-    id: 'global',
-    icon: Globe,
-    iconClass: 'bg-[#a15bf2]/10 text-[#a15bf2] border-[#a15bf2]/20',
-    title: 'Global Infrastructure',
-    description: 'Deploy agents across 30+ regions with sub-100 ms latency.',
-  },
-];
 
 const LoginLeftColumn = () => (
   <div className="flex-1 w-full max-w-xl flex flex-col gap-8 animate-fade-in-up">
