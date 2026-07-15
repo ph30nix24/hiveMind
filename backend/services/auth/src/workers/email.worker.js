@@ -8,12 +8,56 @@ const worker = new Worker(
   async (job) => {
     const { type, to, otp, name } = job.data;
 
-    if (type === 'signup-otp') {
+    if (type === "signup-otp") {
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to,
-        subject: 'Verify your email',
-        html: `<p>Your verification code is <b>${otp}</b>. It expires in 5 minutes.</p>`,
+        subject: "Verify Your HiveMind Account",
+        html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px;background:#111827;color:#F9FAFB;border-radius:12px;">
+
+        <h1 style="text-align:center;color:#A15BF2;margin-bottom:10px;">
+          Welcome to HiveMind 🤖
+        </h1>
+
+        <p style="font-size:16px;line-height:1.7;">
+          Thanks for signing up! To complete your registration, please verify your email address using the One-Time Password (OTP) below.
+        </p>
+
+        <div style="margin:30px 0;text-align:center;">
+          <div style="
+            display:inline-block;
+            background:#1F2937;
+            border:2px dashed #A15BF2;
+            border-radius:10px;
+            padding:18px 40px;
+            font-size:32px;
+            font-weight:bold;
+            letter-spacing:8px;
+            color:#FFFFFF;
+          ">
+            ${otp}
+          </div>
+        </div>
+
+        <p style="font-size:15px;color:#D1D5DB;text-align:center;">
+          This code is valid for <strong>5 minutes</strong>.
+        </p>
+
+        <hr style="border:none;border-top:1px solid #374151;margin:30px 0;">
+
+        <p style="font-size:14px;color:#9CA3AF;line-height:1.7;">
+          If you didn't create a HiveMind account, you can safely ignore this email.
+          Never share your OTP with anyone. HiveMind will never ask for your verification code.
+        </p>
+
+        <p style="margin-top:30px;">
+          Cheers,<br>
+          <strong>The HiveMind Team</strong>
+        </p>
+
+      </div>
+    `,
       });
     }
 
@@ -25,8 +69,8 @@ const worker = new Worker(
         html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px;background:#111827;color:#F9FAFB;border-radius:12px;">
         
-        <h1 style="color:#FBBF24;text-align:center;margin-bottom:10px;">
-          Welcome to HiveMind 🐝
+        <h1 style="color:#A15BF2;text-align:center;margin-bottom:10px;">
+          Welcome to HiveMind 🤖
         </h1>
 
         <p style="font-size:16px;line-height:1.7;">
@@ -42,7 +86,7 @@ const worker = new Worker(
         </p>
 
         <div style="background:#1F2937;padding:20px;border-radius:8px;margin:25px 0;">
-          <h3 style="margin-top:0;color:#FBBF24;">You can now:</h3>
+          <h3 style="margin-top:0;color:#A15BF2;">You can now:</h3>
           <ul style="padding-left:20px;line-height:1.8;">
             <li>🤖 Chat with specialized AI agents</li>
             <li>⚡ Automate complex tasks</li>
@@ -67,13 +111,13 @@ const worker = new Worker(
 
     if (type === "login-user") {
       await transporter.sendMail({
-        from: process.env.MAIL_FROM,
+        from: process.env.EMAIL_USER,
         to,
         subject: "🔐 New Login to Your HiveMind Account",
         html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px;background:#111827;color:#F9FAFB;border-radius:12px;">
 
-        <h1 style="color:#FBBF24;text-align:center;margin-bottom:10px;">
+        <h1 style="color:#A15BF2;text-align:center;margin-bottom:10px;">
           HiveMind
         </h1>
 
