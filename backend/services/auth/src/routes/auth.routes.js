@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { googleLoginHandler } from '../controllers/auth.controller.js';
+import { emailVerificationHandler, googleLoginHandler, loginHandler, signUpHandler } from '../controllers/auth.controller.js';
 
 const authRouter = Router();
 
@@ -9,7 +9,35 @@ authRouter.get('/', (req, res) => {
     })
 })
 
-
+/**
+ * @name    googleLogin
+ * @route   POST /hivemind/auth/google
+ * @access  public
+ */
 authRouter.post('/google', googleLoginHandler);
+
+
+/**
+ * @name    signUpRoute
+ * @route   POST /hivemind/auth/sign-up
+ * @access  public
+ */
+authRouter.post('/sign-up', signUpHandler)
+
+/**
+ * @name    loginRoute
+ * @route   POST /hivemind/auth/login
+ * @access  public
+ */
+authRouter.post('/login', loginHandler)
+
+
+/**
+ * @name    emailVerificationRoute
+ * @route   POST /hivemind/auth/email-verify
+ * @access  public
+ */
+authRouter.post('/email-verify', emailVerificationHandler)
+
 
 export default authRouter;

@@ -69,6 +69,14 @@ export const googleLoginHandler = async (req, res, next) => {
     }
 }
 
+
+/**
+ * @name    signUpHandler
+ * @desc    handle signup using email and password local path 
+ * @route   POST /hivemind/auth/sign-up
+ * @param {*} req  name email password 
+ * @returns 
+ */
 export const signUpHandler = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
@@ -125,6 +133,13 @@ export const signUpHandler = async (req, res, next) => {
 }
 
 
+/**
+ * @name    loginHandler
+ * @desc    handle login using email and password local path 
+ * @route   POST /hivemind/auth/login
+ * @param {*} req  email password 
+ * @returns 
+ */
 export const loginHandler = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -168,6 +183,15 @@ export const loginHandler = async (req, res, next) => {
         next(e)
     }
 }
+
+
+/**
+ * @name    emailVerificationHandler
+ * @desc    handle email verification by confirming otp 
+ * @route   POST /hivemind/auth/email-verify
+ * @param {*} req   otp
+ * @returns 
+ */
 
 export const emailVerificationHandler = async (req, res, next) => {
     try {
