@@ -132,7 +132,7 @@ export const loginHandler = async (req, res, next) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            throw new ApiError(409, "User don't exists.");
+            throw new ApiError(401, "Invalid email or password.");
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -168,3 +168,37 @@ export const loginHandler = async (req, res, next) => {
         next(e)
     }
 }
+
+export const emailVerificationHandler = async (req, res, next) => {
+    try {
+        const { otp } = req.body;
+
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            throw new ApiError(404, "User not found.");
+        }
+
+        const storedOtp = await redis.get(`otp:${user.email}`);
+
+        if (!storedOtp) {
+            throw new ApiError(400, "OTP has expired or is invalid.");
+        }
+
+        if (storedOtp !== otp) {
+            throw new ApiError(400, "Invalid OTP.");
+        }
+
+        user.isVerified = true;
+        await user.save();
+
+        await redis.del(`otp:${user.email}`);
+
+        return res.status(200).json(
+            new ApiResponse(200, null, "Email verified successfully.")
+        );
+
+    } catch (e) {
+        next(e);
+    }
+};
