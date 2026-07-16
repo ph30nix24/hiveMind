@@ -21,6 +21,7 @@ export const signUpApi = async ({ name, email, password }) => {
         const res = await axios.post(`${AUTH_URL}/sign-up`, { name, email, password }, {
             withCredentials: true
         })
+        console.log(res.data)
         return res.data
     } catch (error) {
         console.error("SignUp failed:", error.response?.data || error.message);

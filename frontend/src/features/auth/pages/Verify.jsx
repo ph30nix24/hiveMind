@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ClockIcon, MailSmIcon } from '../../../utils/icons';
 import { NeuralCanvas } from '../components/NeuralCanvas';
 import { features } from '../../../utils';
+import { useToast } from '../../../components/toastContext/useToast';
+import { emailVerifyApi } from '../services/auth.apis';
 
 
 const GLYPH_POOL = Array.from({ length: 24 }, (_, i) => ({
@@ -37,6 +39,8 @@ export default function Verify() {
     const [otpTimer, setOtpTimer] = useState(OTP_TOTAL);
     const [expired, setExpired] = useState(false);
     const inputRefs = useRef([]);
+    const { addToast } = useToast();
+    const navigate = useNavigate()
 
     /* Resend countdown */
     useEffect(() => {
@@ -85,10 +89,13 @@ export default function Verify() {
         if (expired) return;
         const code = otp.join('');
         if (code.length < 6) { setErrorMsg('Please enter all 6 digits.'); triggerShake(); return; }
-        setStatus('loading'); setErrorMsg('');
-        await new Promise(r => setTimeout(r, 1500));
-        if (code === '123456') { setStatus('success'); }
-        else {
+
+        try {
+            const data = await emailVerifyApi({ code });
+            addToast(`Congrutions ${data.message}`, "success")
+            navigate('/')
+        } catch (e) {
+            addToast(`Failed to SignUp ${e.response?.data.message}`, "error")
             setStatus('error'); setErrorMsg('Invalid code. Please try again.');
             triggerShake(); setOtp(Array(6).fill(''));
             setTimeout(() => inputRefs.current[0]?.focus(), 50);
@@ -218,7 +225,7 @@ export default function Verify() {
                     {/* OTP inputs */}
                     <div>
                         <p className="text-[11px] font-semibold mb-3 font-body uppercase tracking-widest text-text-muted/80"
-                            >Verification Code</p>
+                        >Verification Code</p>
                         <div className={`flex justify-between gap-2${shake ? ' otp-shake' : ''}`} onPaste={handlePaste}>
                             {otp.map((digit, idx) => (
                                 <input
@@ -305,9 +312,9 @@ export default function Verify() {
 
                     {/* Divider */}
                     <div className="flex items-center gap-3">
-                        <div className="flex-1 h-px bg-[#ffffff14]"  />
+                        <div className="flex-1 h-px bg-[#ffffff14]" />
                         <span className="text-xs text-[#475569]" >or</span>
-                        <div className="flex-1 h-px bg-[#ffffff14]"/>
+                        <div className="flex-1 h-px bg-[#ffffff14]" />
                     </div>
 
                     {/* Back to sign in */}

@@ -60,7 +60,6 @@ const SignUpForm = () => {
   const [fields, setFields] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const { addToast } = useToast();
   const navigate = useNavigate()
 
@@ -69,10 +68,14 @@ const SignUpForm = () => {
   const handleChange = (e) => setFields((p) => ({ ...p, [e.target.id]: e.target.value }));
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (fields.password !== fields.confirmPassword) {
+      addToast("Passwords do not match", "error");
+      return;
+    }
     try {
       const data = await signUpApi({ ...fields })
       addToast(`Congrutions ${data.message}`, "success")
-      navigate(`/auth/${data.data._id}/verify-email`)
+      navigate(`/auth/${data.data.user._id}/verify-email`)
     } catch (e) {
       addToast(`Failed to SignUp ${e.response?.data.message}`, "error")
     }
@@ -125,7 +128,7 @@ const SignUpForm = () => {
             <div className="relative">
               <div className={iconLeft}><User size={20} /></div>
               <input id="name" type="text" className={inputBase} placeholder="Enter your full name"
-                value={fields.name} onChange={handleChange} autoComplete="name" />
+                value={fields.name} onChange={handleChange} required autoComplete="name" />
             </div>
           </div>
 
@@ -137,7 +140,7 @@ const SignUpForm = () => {
             <div className="relative">
               <div className={iconLeft}><Mail size={20} /></div>
               <input id="email" type="email" className={inputBase} placeholder="Enter your email"
-                value={fields.email} onChange={handleChange} autoComplete="email" />
+                value={fields.email} onChange={handleChange} required autoComplete="email" />
             </div>
           </div>
 
@@ -150,7 +153,7 @@ const SignUpForm = () => {
               <div className={iconLeft}><Lock size={20} /></div>
               <input id="password" type={showPw ? 'text' : 'password'} className={inputWithRight}
                 placeholder="Create a password" minLength={8} value={fields.password} onChange={handleChange}
-                autoComplete="new-password" />
+                autoComplete="new-password" required/>
               <button type="button" className={iconRight} onClick={() => setShowPw((v) => !v)}
                 aria-label={showPw ? 'Hide password' : 'Show password'}>
                 {showPw ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -168,7 +171,7 @@ const SignUpForm = () => {
               <div className={iconLeft}><Lock size={20} /></div>
               <input id="confirmPassword" type={showConfirm ? 'text' : 'password'} className={inputWithRight}
                 placeholder="Confirm your password" value={fields.confirmPassword} onChange={handleChange}
-                autoComplete="new-password" />
+                autoComplete="new-password" required/>
               <button type="button" className={iconRight} onClick={() => setShowConfirm((v) => !v)}
                 aria-label={showConfirm ? 'Hide confirm password' : 'Show confirm password'}>
                 {showConfirm ? <Eye size={20} /> : <EyeOff size={20} />}
