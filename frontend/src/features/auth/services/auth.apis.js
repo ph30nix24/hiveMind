@@ -7,10 +7,10 @@ export const googleLoginApi = async ({ token }) => {
         const res = await axios.post(`${AUTH_URL}/google`, { token }, {
             withCredentials: true
         })
-        console.log(res.data.message);
         return res.data
     } catch (error) {
         console.error("Google login failed:", error.response?.data || error.message);
+        throw error;
     }
 }
 
@@ -21,10 +21,10 @@ export const signUpApi = async ({ name, email, password }) => {
         const res = await axios.post(`${AUTH_URL}/sign-up`, { name, email, password }, {
             withCredentials: true
         })
-        console.log(res.data.message)
         return res.data
     } catch (error) {
         console.error("SignUp failed:", error.response?.data || error.message);
+        throw error;
     }
 }
 
@@ -34,10 +34,10 @@ export const loginApi = async ({ email, password }) => {
         const res = await axios.post(`${AUTH_URL}/login`, { email, password }, {
             withCredentials: true
         })
-        console.log(res.data.message)
         return res.data
     } catch (error) {
         console.error("Login failed:", error.response?.data || error.message);
+        throw error;
     }
 }
 
@@ -48,7 +48,7 @@ export const emailVerifyApi = async ({ otp }) => {
             withCredentials: true
         })
         console.log(res.data.message)
-        
+
     } catch (error) {
         console.error("email verification failed:", error.response?.data || error.message);
     }

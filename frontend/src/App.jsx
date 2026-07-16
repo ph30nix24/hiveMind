@@ -1,9 +1,12 @@
 import { RouterProvider } from 'react-router'
 import { router } from './app.routes'
+import { ToastProvider } from './components/toastContext/toast.context'
 
 const App = () => {
   return (
-    <RouterProvider router={router} />
+    <ToastProvider>
+      <RouterProvider router={router} />
+    </ToastProvider>
   )
 }
 

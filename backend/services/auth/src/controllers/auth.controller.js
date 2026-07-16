@@ -50,9 +50,15 @@ export const googleLoginHandler = async (req, res, next) => {
 
         const sessionID = crypto.randomUUID();
 
-        redis.set(`sessionId:${sessionID}`, JSON.stringify({
-            _id: user._id
-        }), 'EX', 7 * 24 * 60 * 60)
+        const key = `sessionId:${sessionID}`
+        await redis.hset(key, {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            isVerified: String(user.isVerified)
+        })
+        await redis.expire(key, 7 * 24 * 60 * 60)
 
         res.cookie("session", sessionID, {
             httpOnly: true,
@@ -80,14 +86,14 @@ export const googleLoginHandler = async (req, res, next) => {
 export const signUpHandler = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
-
+        console.log(name, email, password)
         if (!email || !password) {
             throw new ApiError(400, "email, and password are required")
         }
         const normalisedEmail = email.toLowerCase().trim()
         const existingUser = await User.findOne({ email: normalisedEmail });
         if (existingUser) {
-            throw new ApiError(409, "user already exists.");
+            throw new ApiError(409, "email is already been taken by a user!");
         }
 
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
@@ -100,10 +106,15 @@ export const signUpHandler = async (req, res, next) => {
         })
 
         const sessionID = crypto.randomUUID();
-
-        await redis.set(`sessionId:${sessionID}`, JSON.stringify({
-            _id: user._id
-        }), 'EX', 7 * 24 * 60 * 60)
+        const key = `sessionId:${sessionID}`
+        await redis.hset(key, {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            isVerified: String(user.isVerified)
+        })
+        await redis.expire(key, 7 * 24 * 60 * 60)
 
         res.cookie("session", sessionID, {
             httpOnly: true,
@@ -157,10 +168,15 @@ export const loginHandler = async (req, res, next) => {
         }
 
         const sessionID = crypto.randomUUID();
-
-        await redis.set(`sessionId:${sessionID}`, JSON.stringify({
-            _id: user._id
-        }), 'EX', 7 * 24 * 60 * 60)
+        const key = `sessionId:${sessionID}`
+        await redis.hset(key, {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            isVerified: String(user.isVerified)
+        })
+        await redis.expire(key, 7 * 24 * 60 * 60)
 
         res.cookie("session", sessionID, {
             httpOnly: true,
@@ -196,13 +212,8 @@ export const loginHandler = async (req, res, next) => {
 export const emailVerificationHandler = async (req, res, next) => {
     try {
         const { otp } = req.body;
-
-        const user = await User.findById(req.user._id);
-
-        if (!user) {
-            throw new ApiError(404, "User not found.");
-        }
-
+        const sessionId = req.cookie?.session
+        const user = req.user;
         const storedOtp = await redis.get(`otp:${user.email}`);
 
         if (!storedOtp) {
@@ -215,9 +226,10 @@ export const emailVerificationHandler = async (req, res, next) => {
 
         user.isVerified = true;
         await user.save();
-
         await redis.del(`otp:${user.email}`);
-
+        await redis.hset(`sessionId:${sessionID}`, {
+            isVerified: "true"
+        })
         return res.status(200).json(
             new ApiResponse(200, null, "Email verified successfully.")
         );

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { emailVerificationHandler, googleLoginHandler, loginHandler, signUpHandler } from '../controllers/auth.controller.js';
+import protect from '../middleware/auth.middleware.js';
 
 const authRouter = Router();
 
@@ -37,7 +38,7 @@ authRouter.post('/login', loginHandler)
  * @route   POST /hivemind/auth/email-verify
  * @access  public
  */
-authRouter.post('/email-verify', emailVerificationHandler)
+authRouter.post('/email-verify', protect, emailVerificationHandler)
 
 
 export default authRouter;

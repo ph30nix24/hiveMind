@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../../utils/firebase';
 import { googleLoginApi } from '../services/auth.apis';
+import { useToast } from '../../../components/toastContext/useToast';
 
 /* ── Social Icons ─────────────────────────────────────────── */
 const GoogleIcon = () => (
@@ -25,7 +26,7 @@ const LoginForm = () => {
     const [remember, setRemember] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const { addToast } = useToast()
     const handleChange = (e) => setFields((p) => ({ ...p, [e.target.id]: e.target.value }));
 
     const googleLogin = async () => {
@@ -33,9 +34,9 @@ const LoginForm = () => {
             const data = await signInWithPopup(auth, googleProvider);
             const idToken = await data.user.getIdToken();
             const res = await googleLoginApi({ token: idToken })
-            console.log(res.message)
+            addToast(`congrats ${res.message}`, "success")
         } catch (error) {
-            console.error("Error while login", error.message)
+            addToast(`Failed ${error.response?.data.message}`, "error")
         }
     }
 

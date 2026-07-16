@@ -13,7 +13,10 @@
   --color-text-muted: #94a3b8;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
 
 body {
   background-color: #080811;
@@ -26,16 +29,23 @@ body {
   background-attachment: fixed;
 }
 
-::selection { background-color: #5969ff; color: white; }
+::selection {
+  background-color: #5969ff;
+  color: white;
+}
 
-html, body {
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE/Edge */
+html,
+body {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;                /* Chrome, Safari, Edge */
+  display: none;
+  /* Chrome, Safari, Edge */
 }
 
 /* ── Custom utilities ─────────────────────────────────────── */
@@ -86,10 +96,45 @@ body::-webkit-scrollbar {
   background: rgba(255, 255, 255, 0.05);
 }
 
+
+.toast {
+  animation: toast-in 0.4s var(--transition-spring) forwards;
+}
+
+.toast.removing {
+  animation: toast-out 0.3s var(--transition-smooth) forwards;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(60px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(60px) scale(0.9);
+  }
+}
+
 /* ── Animations ───────────────────────────────────────────── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in-up {

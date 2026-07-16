@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
                 element: <SignUp />,
             },
             {
-                path: "verify-email",
+                path: ":id/verify-email",
                 element: <Verify />
             }
         ]
