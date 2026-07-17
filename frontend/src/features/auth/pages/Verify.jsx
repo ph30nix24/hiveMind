@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router';
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ClockIcon, MailSmIcon } from '../../../utils/icons';
 import { NeuralCanvas } from '../components/NeuralCanvas';
 import { features } from '../../../utils';
-import { useToast } from '../../../components/toastContext/useToast';
 import { emailVerifyApi } from '../services/auth.apis';
+import { useDispatch } from 'react-redux';
+import { addToast } from '../../../redux/features/toastSlice';
 
 
 const GLYPH_POOL = Array.from({ length: 24 }, (_, i) => ({
@@ -39,7 +40,7 @@ export default function Verify() {
     const [otpTimer, setOtpTimer] = useState(OTP_TOTAL);
     const [expired, setExpired] = useState(false);
     const inputRefs = useRef([]);
-    const { addToast } = useToast();
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     /* Resend countdown */
@@ -92,10 +93,10 @@ export default function Verify() {
 
         try {
             const data = await emailVerifyApi({ code });
-            addToast(`Congrutions ${data.message}`, "success")
+            dispatch(addToast(`Congrutions ${data.message}`, "success"))
             navigate('/')
         } catch (e) {
-            addToast(`Failed to SignUp ${e.response?.data.message}`, "error")
+            dispatch(addToast(`Failed to SignUp ${e.response?.data.message}`, "error"))
             setStatus('error'); setErrorMsg('Invalid code. Please try again.');
             triggerShake(); setOtp(Array(6).fill(''));
             setTimeout(() => inputRefs.current[0]?.focus(), 50);

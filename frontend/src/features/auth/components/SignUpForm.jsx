@@ -5,7 +5,8 @@ import { auth, googleProvider } from '../../../utils/firebase';
 import { googleLoginApi, signUpApi } from '../services/auth.apis';
 import { GoogleIcon } from '../../../utils/icons';
 import { useNavigate } from 'react-router';
-import { useToast } from '../../../components/toastContext/useToast';
+import { useDispatch } from 'react-redux';
+import { addToast } from '../../../redux/features/toastSlice';
 
 /* ── Password strength ────────────────────────────────────── */
 function getStrength(pw) {
@@ -60,8 +61,8 @@ const SignUpForm = () => {
   const [fields, setFields] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const { addToast } = useToast();
   const navigate = useNavigate()
+  const dispatch =  useDispatch()
 
   const strength = getStrength(fields.password);
 
@@ -69,15 +70,16 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (fields.password !== fields.confirmPassword) {
-      addToast("Passwords do not match", "error");
+      dispatch(addToast("Passwords do not match", "error"))
       return;
     }
     try {
       const data = await signUpApi({ ...fields })
-      addToast(`Congrutions ${data.message}`, "success")
+      dispatch(addToast(`Congrutions ${data.message}`, "success"))
       navigate(`/auth/${data.data.user._id}/verify-email`)
     } catch (e) {
-      addToast(`Failed to SignUp ${e.response?.data.message}`, "error")
+      addToast()
+      dispatch(addToast(`Failed to SignUp ${e.response?.data.message}`, "error"))
     }
   };
 
@@ -88,7 +90,7 @@ const SignUpForm = () => {
       const resData = await googleLoginApi({ token: idToken })
       addToast(`Congrutions ${resData.message}`, "success")
     } catch (e) {
-      addToast(`Failed to SignUp ${e.response?.data.message}`, "error")
+      dispatch(addToast(`Failed to SignUp ${e.response?.data.message}`, "error"))
     }
   }
 
