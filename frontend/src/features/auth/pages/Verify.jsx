@@ -6,6 +6,7 @@ import { features } from '../../../utils';
 import { emailVerifyApi } from '../services/auth.apis';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../redux/features/toastSlice';
+import { setError } from '../../../redux/features/userSlice';
 
 
 const GLYPH_POOL = Array.from({ length: 24 }, (_, i) => ({
@@ -97,9 +98,11 @@ export default function Verify() {
             navigate('/')
         } catch (e) {
             dispatch(addToast(`Failed to SignUp ${e.response?.data.message}`, "error"))
+            dispatch(setError(e.response?.data.message))
             setStatus('error'); setErrorMsg('Invalid code. Please try again.');
             triggerShake(); setOtp(Array(6).fill(''));
             setTimeout(() => inputRefs.current[0]?.focus(), 50);
+
         }
     };
 

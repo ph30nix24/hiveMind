@@ -7,6 +7,7 @@ import { GoogleIcon } from '../../../utils/icons';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../redux/features/toastSlice';
+import { setUser } from '../../../redux/features/userSlice';
 
 /* ── Password strength ────────────────────────────────────── */
 function getStrength(pw) {
@@ -75,6 +76,7 @@ const SignUpForm = () => {
     }
     try {
       const data = await signUpApi({ ...fields })
+      dispatch(setUser(data.user))
       dispatch(addToast(`Congrutions ${data.message}`, "success"))
       navigate(`/auth/${data.data.user._id}/verify-email`)
     } catch (e) {
@@ -88,7 +90,8 @@ const SignUpForm = () => {
       const data = await signInWithPopup(auth, googleProvider)
       const idToken = await data.user.getIdToken();
       const resData = await googleLoginApi({ token: idToken })
-      addToast(`Congrutions ${resData.message}`, "success")
+      dispatch(setUser(resData.user))
+      dispatch(addToast(`Congrutions ${resData.message}`, "success"))
     } catch (e) {
       dispatch(addToast(`Failed to SignUp ${e.response?.data.message}`, "error"))
     }
