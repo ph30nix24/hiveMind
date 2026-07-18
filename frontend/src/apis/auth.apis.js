@@ -54,5 +54,3 @@ export const emailVerifyApi = async ({ otp }) => {
         console.error("email verification failed:", error.response?.data || error.message);
     }
 }
-
-

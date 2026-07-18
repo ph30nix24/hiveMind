@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router';
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ClockIcon, MailSmIcon } from '../../../utils/icons';
 import { NeuralCanvas } from '../components/NeuralCanvas';
 import { features } from '../../../utils';
-import { emailVerifyApi } from '../services/auth.apis';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../redux/features/toastSlice';
 import { setError } from '../../../redux/features/userSlice';
+import { emailVerifyApi } from '../../../apis/auth.apis';
 
 
 const GLYPH_POOL = Array.from({ length: 24 }, (_, i) => ({

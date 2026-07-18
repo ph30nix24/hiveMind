@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../../utils/firebase';
-import { googleLoginApi, signUpApi } from '../services/auth.apis';
 import { GoogleIcon } from '../../../utils/icons';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../redux/features/toastSlice';
 import { setUser } from '../../../redux/features/userSlice';
+import { googleLoginApi, signUpApi } from '../../../apis/auth.apis';
 
 /* ── Password strength ────────────────────────────────────── */
 function getStrength(pw) {

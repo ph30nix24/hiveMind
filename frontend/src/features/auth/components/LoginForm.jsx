@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../../utils/firebase';
-import { googleLoginApi, loginApi } from '../services/auth.apis';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../redux/features/toastSlice';
 import { GoogleIcon } from '../../../utils/icons';
-import { setUser } from '../../../redux/features/userSlice';
+import { setError, setUser } from '../../../redux/features/userSlice';
+import { googleLoginApi, loginApi } from '../../../apis/auth.apis';
 
 /* ── Social Icons ─────────────────────────────────────────── */
 
@@ -20,7 +20,6 @@ const LoginForm = () => {
     const [fields, setFields] = useState({ email: '', password: '' });
     const [showPw, setShowPw] = useState(false);
     const [remember, setRemember] = useState(false);
-    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch()
     const handleChange = (e) => setFields((p) => ({ ...p, [e.target.id]: e.target.value }));
 
@@ -33,6 +32,7 @@ const LoginForm = () => {
             dispatch(addToast(`congrats ${res.message}`, "success"))
         } catch (error) {
             dispatch(addToast(`Failed ${error.response?.data.message}`, "error"))
+            dispatch(setError(error.response?.data.message))
         }
     }
 
@@ -44,6 +44,7 @@ const LoginForm = () => {
             dispatch(addToast(`congrats ${data.message}`, "success"))
         } catch (error) {
             dispatch(addToast(`Failed to login ${error.response?.data.message}`, "error"))
+            dispatch(setError(error.response?.data.message))
         }
     };
 
@@ -165,23 +166,12 @@ const LoginForm = () => {
                         <button
                             id="sign-in-btn"
                             type="submit"
-                            disabled={loading}
                             className="btn-gradient w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-lg text-sm font-semibold text-white hover:opacity-90 active:scale-[0.98] transition-all focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 cursor-pointer border-none font-[inherit] disabled:opacity-60 disabled:cursor-not-allowed"
                         >
-                            {loading ? (
-                                <>
-                                    <svg className="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                                    </svg>
-                                    Signing in…
-                                </>
-                            ) : (
-                                <>
-                                    Sign In
-                                    <ArrowRight size={16} />
-                                </>
-                            )}
+                            <>
+                                Sign In
+                                <ArrowRight size={16} />
+                            </>
                         </button>
                     </div>
                 </form>
