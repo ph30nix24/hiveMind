@@ -212,7 +212,7 @@ export const loginHandler = async (req, res, next) => {
 export const emailVerificationHandler = async (req, res, next) => {
     try {
         const { otp } = req.body;
-        const sessionId = req.cookie?.session
+        const session = req.headers['x-cookie-session'];
         const user = req.user;
         const storedOtp = await redis.get(`otp:${user.email}`);
 
@@ -224,10 +224,17 @@ export const emailVerificationHandler = async (req, res, next) => {
             throw new ApiError(400, "Invalid OTP.");
         }
 
-        user.isVerified = true;
-        await user.save();
+        const existingUser = await User.findByIdAndUpdate(
+            user._id,
+            { $set: { isVerified: true } },
+            { returnDocument: 'after' }   
+        )
+
+        if (!existingUser) {
+            throw new ApiError(404, "User not found")
+        }
         await redis.del(`otp:${user.email}`);
-        await redis.hset(`sessionId:${sessionID}`, {
+        await redis.hset(`sessionId:${session}`, {
             isVerified: "true"
         })
         return res.status(200).json(

@@ -93,7 +93,7 @@ export default function Verify() {
         if (code.length < 6) { setErrorMsg('Please enter all 6 digits.'); triggerShake(); return; }
 
         try {
-            const data = await emailVerifyApi({ code });
+            const data = await emailVerifyApi({ otp: code });
             dispatch(addToast(`Congrutions ${data.message}`, "success"))
             navigate('/')
         } catch (e) {

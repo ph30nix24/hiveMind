@@ -49,7 +49,7 @@ export const emailVerifyApi = async ({ otp }) => {
             withCredentials: true
         })
         console.log(res.data.message)
-
+        return res.data
     } catch (error) {
         console.error("email verification failed:", error.response?.data || error.message);
     }

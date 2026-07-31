@@ -3,7 +3,7 @@ import ApiError from '../utils/ApiError.js'
 
 
 const protect = async (req, res, next) => {
-    const session = req.cookie?.session;
+    const session = req.cookies?.session;
     try {
         if(!session) {
             throw new ApiError(401,  "Session ID is required.")
