@@ -2,9 +2,9 @@ import express from 'express'
 import proxy from 'express-http-proxy'
 import cors from 'cors'
 import morgan from 'morgan'
-import errorHandler from './middlewares/errorHandler.middleware';
-import protect from './middlewares/auth.middleware'
-import { getCurrentUser } from './controller/user.controller';
+import errorHandler from './middlewares/errorHandler.middleware.js';
+import protect from './middlewares/auth.middleware.js'
+import { getCurrentUser } from './controller/user.controller.js';
 const app = express();
 
 
@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     return res.status(200).json({message: 'Hello from gateway'})
 })
 
-app.get('/get-me', protect, getCurrentUser)
+app.get('/hivemind/user/get-me', protect, getCurrentUser)
 app.use(errorHandler)
 
 

@@ -238,3 +238,4 @@ export const emailVerificationHandler = async (req, res, next) => {
         next(e);
     }
 };
+
