@@ -107,6 +107,7 @@ export const signUpHandler = async (req, res, next) => {
 
         const sessionID = crypto.randomUUID();
         const key = `sessionId:${sessionID}`
+        const cooldownKey = `otp-cooldown:${user.email}`;
         await redis.hset(key, {
             _id: user._id,
             name: user.name,
@@ -115,6 +116,8 @@ export const signUpHandler = async (req, res, next) => {
             isVerified: String(user.isVerified)
         })
         await redis.expire(key, 7 * 24 * 60 * 60)
+
+        await redis.set(cooldownKey, "1", 'EX', 60);
 
         res.cookie("session", sessionID, {
             httpOnly: true,
@@ -246,3 +249,76 @@ export const emailVerificationHandler = async (req, res, next) => {
     }
 };
 
+/**
+ * @name    resendOtpHandler
+ * @desc    handle to resend a new otp if the previous one expired or wasn't received
+ * @route   POST /hivemind/auth/resend-otp
+ * @access  private (requires authenticated session)
+ * @returns 
+ */
+export const resendOtpHandler = async (req, res, next) => {
+    try {
+        const user = req.user;
+
+        if (!user) {
+            throw new ApiError(401, "Unauthorized. Please log in again.");
+        }
+
+        if (user.isVerified) {
+            throw new ApiError(400, "Email is already verified.");
+        }
+
+        const cooldownKey = `otp-cooldown:${user.email}`;
+        const isOnCooldown = await redis.get(cooldownKey);
+
+        if (isOnCooldown) {
+            throw new ApiError(429, "Please wait before requesting another OTP.");
+        }
+
+        const otp = crypto.randomInt(100000, 1000000).toString();
+
+        await redis.set(`otp:${user.email}`, otp, 'EX', 300);
+        await redis.set(cooldownKey, "1", 'EX', 60);
+
+        await emailQueue.add('signup-otp', {
+            type: 'signup-otp',
+            to: user.email,
+            otp: otp
+        });
+
+        return res.status(200).json(new ApiResponse(200, null, "OTP resent successfully."));
+
+    } catch (e) {
+        next(e);
+    }
+};
+
+
+/**
+ * @name    logoutHandler
+ * @desc    handle user logout by clearing session from redis and cookie
+ * @route   POST /hivemind/auth/logout
+ * @access  private
+ * @returns 
+ */
+export const logoutHandler = async (req, res, next) => {
+    try {
+        const session = req.headers['x-cookie-session'];
+
+        if (sessionID) {
+            const key = `sessionId:${session}`;
+            await redis.del(key);
+        }
+
+        res.clearCookie("session", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+        });
+
+        return res.status(200).json(new ApiResponse(200, null, "logged out successfully"));
+
+    } catch (e) {
+        next(e);
+    }
+};
