@@ -6,7 +6,7 @@ import { features } from '../../../utils';
 import { useDispatch } from 'react-redux';
 import { addToast } from '../../../redux/features/toastSlice';
 import { setError } from '../../../redux/features/userSlice';
-import { emailVerifyApi } from '../../../apis/auth.apis';
+import { emailVerifyApi, resendOtpApi } from '../../../apis/auth.apis';
 
 
 const GLYPH_POOL = Array.from({ length: 24 }, (_, i) => ({
@@ -106,12 +106,17 @@ export default function Verify() {
         }
     };
 
-    const handleResend = () => {
+    const handleResend = async () => {
         if (!canResend) return;
-        setOtp(Array(6).fill('')); setStatus('idle'); setErrorMsg('');
-        setResendTimer(RESEND_SECS); setCanResend(false);
-        setOtpTimer(OTP_TOTAL); setExpired(false);
-        setTimeout(() => inputRefs.current[0]?.focus(), 50);
+        try {
+            const result = await resendOtpApi();
+            setResendTimer(RESEND_SECS); setCanResend(false);
+            setOtpTimer(OTP_TOTAL); setExpired(false);
+            setTimeout(() => inputRefs.current[0]?.focus(), 50);
+            dispatch(addToast(`${result.message}`, "success"))
+        }catch (e) {
+            dispatch(addToast(`Failed in Resend OTP ${e.response?.data.message}`, "error"))
+        }
     };
 
     const mins = Math.floor(otpTimer / 60);

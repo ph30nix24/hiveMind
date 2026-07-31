@@ -48,9 +48,37 @@ export const emailVerifyApi = async ({ otp }) => {
         const res = await axios.post(`${AUTH_URL}/email-verify`, { otp }, {
             withCredentials: true
         })
-        console.log(res.data.message)
         return res.data
     } catch (error) {
         console.error("email verification failed:", error.response?.data || error.message);
+        throw error
+    }
+}
+
+
+export const resendOtpApi = async () => {
+    try {
+        const res = await axios.get(`${AUTH_URL}/resend-otp`, {
+            withCredentials: true
+        })
+        console.log(res.data.message)
+        return res.data
+    } catch (error) {
+        console.error("resend otp failed:", error.response?.data || error.message);
+        throw error
+    }
+}
+
+
+export const logoutApi = async () => {
+    try {
+        const res = await axios.post(`${AUTH_URL}/logout`,{}, {
+            withCredentials: true
+        })
+        console.log(res.data.message)
+        return res.data
+    } catch (error) {
+        console.error("logout failed:", error.response?.data || error.message);
+        throw error
     }
 }
